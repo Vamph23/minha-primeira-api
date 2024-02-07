@@ -34,23 +34,58 @@ app.post('/usuario', async (req, res) => {
     }
 })
 app.get('/listarUsuarios', async (req, res) => {
-try {
-    const usuarios = await firestore.getDocs(firestore.collection(db, 'usuario'))
-    const usuarioslista = usuarios.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-    }))
+    try {
+        const usuarios = await firestore.getDocs(firestore.collection(db, 'usuario'))
+        const usuarioslista = usuarios.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }))
 
-    res.send(usuarioslista)
-} catch (e) {
-    console.log("Erro ao listar usuários:" + e)
-    
-    res.status(500).send("Erro ao listar usuários: " + e )
-    
-}
+        res.send(usuarioslista)
+    } catch (e) {
+        console.log("Erro ao listar usuários:" + e)
+
+        res.status(500).send("Erro ao listar usuários: " + e)
+
+    }
 })
 
 
+
+app.put('/atualizarUsuario/:id', async (req, res) => {
+
+    const id = req.params.id
+    const nome = req.body.nome
+
+    try {
+        await firestore.updateDoc(firestore.doc(db, 'usuarios', id), {
+
+            nome: nome,
+
+        })
+        res.send("Usuário atualizado com sucesso!")
+    } catch (e) {
+        console.log('Erro ao atualizar usuários: ' + e)
+        res.status(500).send('Erro ao atualizar usuários: ' + e)
+    }
+
+})
+
+app.delete('/deletarUsuario/:id', async (req, res)=>{
+    const id = req.params.id
+
+    try {
+        await firestore.deleteDoc(firestore.doc(db,'usuarios', id))
+
+        res.send ('Usuário deletado com sucesso!')
+    } catch (e) {
+       console.log('Erro  ao deletar usuário:' +e)
+
+       res.status(500).send('Erro ao deletae usuário:' +e)
+        
+      
+    }
+})
 
 app.listen(3000, function () {
     console.log("serviço rodando na porta em http://localhost:3000");

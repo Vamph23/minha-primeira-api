@@ -78,11 +78,11 @@ app.put('/atualizarFormulario/:id', async (req, res) => {
 
 })
 
-app.delete('/deletarUsuario/:id', async (req, res)=>{
+app.delete('/deletarFormulario/:id', async (req, res)=>{
     const id = req.params.id
 
     try {
-        await firestore.deleteDoc(firestore.doc(db,'Formulario', id))
+        await firestore.deleteDoc(firestore.doc(db,'formulario', id))
 
         res.send ('Formulario deletado com sucesso!')
     } catch (e) {
